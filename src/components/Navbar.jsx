@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
+import logoImage from "../../public/logo.png";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -37,13 +39,7 @@ export default function Navbar() {
     <header className={`sticky top-0 z-[1000] h-[72px] w-full transition-all duration-300 ${scrolled ? "bg-background-dark/80 backdrop-blur-lg border-b border-border shadow-md" : "bg-transparent"}`}>
       <div className="container h-full flex items-center justify-between mx-auto px-4 lg:px-8">
         <Link href="/" className="flex items-center gap-2 z-[1001]" onClick={closeMobileMenu}>
-          <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M50 15L15 45H25V85H75V45H85L50 15Z" fill="#c7833e" />
-            <path d="M50 25L30 42.14V75H70V42.14L50 25Z" fill="#1a365d" />
-            <path d="M50 40C45 50 40 60 40 75H60C60 60 55 50 50 40Z" fill="#d69e2e" />
-            <path d="M45 45C42.5 50 40 55 40 60" stroke="#d69e2e" strokeWidth="2" strokeLinecap="round" />
-            <path d="M55 45C57.5 50 60 55 60 60" stroke="#d69e2e" strokeWidth="2" strokeLinecap="round" />
-          </svg>
+          <Image src={logoImage} alt="Desa Keduyung Logo" width={40} height={40} className="object-contain rounded-sm" />
           <div className="flex flex-col">
             <span className="font-heading font-bold text-xl tracking-wider text-text-primary leading-tight">DESA KEDUYUNG</span>
             <span className="text-xs text-gold uppercase tracking-widest font-medium">Kumpulan UMKM</span>

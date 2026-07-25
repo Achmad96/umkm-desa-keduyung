@@ -7,7 +7,7 @@ export default async function UmkmPage() {
 
   return (
     <div className="min-h-screen pb-16">
-      <header 
+      <header
         className="h-[40vh] min-h-[350px] bg-cover bg-center flex flex-col items-center justify-center text-center p-8 mb-12"
         style={{ backgroundImage: "linear-gradient(to bottom, rgba(26, 54, 93, 0.7), rgba(15, 23, 42, 0.9)), url('/images/hero-village.png')" }}
       >
@@ -28,7 +28,7 @@ export default async function UmkmPage() {
           <div className="w-full h-[300px] rounded-lg overflow-hidden relative">
             <div className="absolute top-4 right-4 bg-gold text-background-dark px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
               </svg>
               FEATURED
             </div>

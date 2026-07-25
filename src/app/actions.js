@@ -2,20 +2,22 @@
 
 import { supabaseAdmin } from '@/lib/supabase';
 import { revalidatePath } from 'next/cache';
-import fs from 'fs';
-import path from 'path';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
-import Database from 'better-sqlite3';
 import { createSession, getSession } from '@/lib/auth';
-
-const dbPath = path.join(process.cwd(), 'umkm.db');
 
 export async function loginUser(username, password) {
   try {
-    const db = new Database(dbPath);
-    const admin = db.prepare('SELECT * FROM admins WHERE username = ?').get(username);
-    db.close();
+    const { data: admin, error } = await supabaseAdmin
+      .from('admins')
+      .select('*')
+      .eq('username', username)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error querying Supabase for admin login:', error);
+      return { success: false, error: 'Terjadi kesalahan pada server.' };
+    }
 
     if (!admin) {
       return { success: false, error: 'Username atau password salah.' };
@@ -60,32 +62,36 @@ export async function registerUmkm(formData) {
     whatsappLink = `https://wa.me/${cleanPhone}`;
   }
 
-  // Handle image upload (currently still saving locally)
-  // If user wants to migrate to Supabase Storage, they can update this part
+  // Generate UMKM ID first so we can use it for the image filename
+  const id = crypto.randomUUID();
+
+  // Handle image upload using Supabase Storage
   let imageSrc = '/images/village-landscape.png';
   const imageFile = formData.get('image');
-  
+
   if (imageFile && imageFile.size > 0) {
-    const buffer = Buffer.from(await imageFile.arrayBuffer());
-    const uniqueSuffix = crypto.randomBytes(8).toString('hex');
-    const fileName = `${uniqueSuffix}-${imageFile.name.replace(/\s+/g, '-')}`;
-    const filePath = path.join(process.cwd(), 'public', 'images', fileName);
-    
-    fs.writeFileSync(filePath, buffer);
-    imageSrc = `/images/${fileName}`;
-  } else {
-    // Choose default image based on category if no image is uploaded
-    if (kategori.includes('Food') || kategori.includes('Makanan') || kategori.includes('Kuliner')) {
-        imageSrc = '/images/nasi-pecel.png';
-    } else if (kategori.includes('Clothing') || kategori.includes('Fashion')) {
-        imageSrc = '/images/batik-clothing.png';
-    } else if (kategori.includes('Kerajinan')) {
-        imageSrc = '/images/kerajinan-tangan.png';
-    } else if (kategori.includes('Jasa')) {
-        imageSrc = '/images/jasa-service.png';
-    } else if (kategori.includes('Minuman')) {
-        imageSrc = '/images/es-teh.png';
+    const buffer = await imageFile.arrayBuffer();
+
+    // Extract file extension and append to ID
+    const ext = imageFile.name.split('.').pop() || 'jpg';
+    const fileName = `${id}.${ext}`;
+
+    const { data, error } = await supabaseAdmin.storage
+      .from('umkm-images')
+      .upload(fileName, buffer, {
+        contentType: imageFile.type || 'image/jpeg',
+      });
+
+    if (error) {
+      console.error('Error uploading image to Supabase:', error);
+      return { success: false, error: 'Gagal mengunggah gambar. Silakan coba lagi.' };
     }
+
+    const { data: publicUrlData } = supabaseAdmin.storage
+      .from('umkm-images')
+      .getPublicUrl(fileName);
+
+    imageSrc = publicUrlData.publicUrl;
   }
 
   try {
@@ -98,7 +104,7 @@ export async function registerUmkm(formData) {
     // Generate slug
     let baseSlug = namaUsaha.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
     let slug = baseSlug;
-    
+
     // Check slug uniqueness
     const { data: existing } = await supabaseAdmin
       .from('umkms')
@@ -109,8 +115,6 @@ export async function registerUmkm(formData) {
     if (existing) {
       slug = `${baseSlug}-${crypto.randomBytes(2).toString('hex')}`;
     }
-
-    const id = crypto.randomUUID();
 
     const { error } = await supabaseAdmin
       .from('umkms')
@@ -128,7 +132,7 @@ export async function registerUmkm(formData) {
           shopeeLink,
           tiktokLink,
           mapsLink,
-          imageSrc
+          imgSrc: imageSrc
         }
       ]);
 
@@ -136,7 +140,7 @@ export async function registerUmkm(formData) {
       console.error('Error inserting UMKM into Supabase:', error);
       return { success: false, error: 'Gagal mendaftar. Silakan coba lagi.' };
     }
-    
+
     revalidatePath('/umkm');
     revalidatePath('/');
     return { success: true };

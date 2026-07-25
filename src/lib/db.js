@@ -1,5 +1,13 @@
 import { supabase } from './supabase';
 
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://qlrwbstgczhdgxjlobzz.supabase.co';
+
+function formatImageSrc(imgSrc) {
+  if (!imgSrc) return null;
+  if (imgSrc.startsWith('http') || imgSrc.startsWith('/')) return imgSrc;
+  return `${supabaseUrl}/storage/v1/object/public/umkm-images/${imgSrc}`;
+}
+
 export async function getUmkms() {
   try {
     const { data, error } = await supabase
@@ -12,8 +20,10 @@ export async function getUmkms() {
       return [];
     }
 
-    // Adapt casing since Supabase might have returned exactly what we defined
-    return data || [];
+    return (data || []).map(umkm => ({
+      ...umkm,
+      imageSrc: formatImageSrc(umkm.imgSrc)
+    }));
   } catch (error) {
     console.error('Error fetching UMKMs:', error);
     return [];
@@ -22,7 +32,7 @@ export async function getUmkms() {
 
 export async function getUmkmBySlug(slug) {
   try {
-    const { data, error } = await supabase
+    const { data: umkm, error } = await supabase
       .from('umkms')
       .select('*')
       .eq('slug', slug)
@@ -33,7 +43,12 @@ export async function getUmkmBySlug(slug) {
       return null;
     }
 
-    return data;
+    if (!umkm) return null;
+    
+    return {
+      ...umkm,
+      imageSrc: formatImageSrc(umkm.imgSrc)
+    };
   } catch (error) {
     console.error('Error fetching UMKM by slug:', error);
     return null;

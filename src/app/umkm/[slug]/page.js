@@ -7,7 +7,7 @@ export async function generateMetadata({ params }) {
   const { slug } = await params;
   const umkm = await getUmkmBySlug(slug);
   if (!umkm) return { title: 'UMKM Tidak Ditemukan' };
-  
+
   return {
     title: `${umkm.namaUsaha} | UMKM Desa Keduyung`,
     description: umkm.deskripsi
@@ -25,15 +25,15 @@ export default async function UmkmDetailPage({ params }) {
   return (
     <div className="min-h-screen pb-20">
       <header className="relative w-full h-[50vh] min-h-[400px]">
-        <Image 
-          src={umkm.imageSrc} 
-          alt={umkm.namaUsaha} 
+        <Image
+          src={umkm.imageSrc || '/images/village-landscape.png'}
+          alt={umkm.namaUsaha || 'UMKM'}
           fill
           priority
           className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/80 to-transparent"></div>
-        
+
         <div className="absolute inset-0 flex flex-col justify-end max-w-[1200px] mx-auto px-8 pb-12">
           <div className="flex items-center gap-3 text-sm font-body bg-black/30 backdrop-blur-md border border-white/10 px-6 py-2.5 rounded-full shadow-xl mb-6 w-fit">
             <Link href="/" className="text-slate-300 hover:text-gold transition-colors flex items-center gap-2">
@@ -61,7 +61,7 @@ export default async function UmkmDetailPage({ params }) {
 
       <main className="max-w-[1200px] mx-auto px-8 -mt-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
+
           <div className="lg:col-span-2">
             <section className="bg-white/5 backdrop-blur-md border border-white/5 rounded-2xl p-8 mb-8">
               <h2 className="font-heading text-2xl text-white mb-4">Tentang Usaha</h2>
@@ -70,11 +70,11 @@ export default async function UmkmDetailPage({ params }) {
               </p>
             </section>
           </div>
-          
+
           <div className="lg:col-span-1 space-y-8">
             <section className="bg-white/5 backdrop-blur-md border border-white/5 rounded-2xl p-8">
               <h3 className="font-heading text-xl text-white mb-6">Informasi Kontak</h3>
-              
+
               <ul className="space-y-6 font-body">
                 <li className="flex items-start">
                   <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary mr-4">
@@ -88,7 +88,7 @@ export default async function UmkmDetailPage({ params }) {
                     <p className="text-white">{umkm.alamat}</p>
                   </div>
                 </li>
-                
+
                 <li className="flex items-start">
                   <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary mr-4">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -114,7 +114,7 @@ export default async function UmkmDetailPage({ params }) {
                     <span className="text-sm font-body text-slate-300">WhatsApp</span>
                   </a>
                 )}
-                
+
                 {umkm.shopeeLink && (
                   <a href={umkm.shopeeLink} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-[#EE4D2D]/20 hover:border-[#EE4D2D] transition-all group">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-[#EE4D2D] mb-2 group-hover:scale-110 transition-transform">
@@ -125,7 +125,7 @@ export default async function UmkmDetailPage({ params }) {
                     <span className="text-sm font-body text-slate-300">Shopee</span>
                   </a>
                 )}
-                
+
                 {umkm.tiktokLink && (
                   <a href={umkm.tiktokLink} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/20 hover:border-white transition-all group">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-white mb-2 group-hover:scale-110 transition-transform">
@@ -134,7 +134,7 @@ export default async function UmkmDetailPage({ params }) {
                     <span className="text-sm font-body text-slate-300">TikTok</span>
                   </a>
                 )}
-                
+
                 {umkm.mapsLink && (
                   <a href={umkm.mapsLink} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-[#EA4335]/20 hover:border-[#EA4335] transition-all group">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-[#EA4335] mb-2 group-hover:scale-110 transition-transform">
