@@ -47,12 +47,15 @@ export default function Navbar() {
         </Link>
 
         <nav className="hidden md:flex gap-8 items-center">
-          {navLinks.map((link) => (
-            <Link key={link.path} href={link.path} className={`font-heading font-semibold tracking-wider relative transition-colors duration-150 py-1 group hover:text-gold ${pathname === link.path ? "text-gold-light" : "text-text-primary"}`}>
-              {link.name}
-              <span className={`absolute bottom-0 left-0 h-[2px] bg-gold transition-all duration-300 ${pathname === link.path ? "w-full" : "w-0 group-hover:w-full"}`} />
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = pathname === link.path || (link.path !== "/" && pathname.startsWith(link.path));
+            return (
+              <Link key={link.path} href={link.path} className={`font-heading font-semibold tracking-wider relative transition-colors duration-150 py-1 group hover:text-gold ${isActive ? "text-gold-light" : "text-text-primary"}`}>
+                {link.name}
+                <span className={`absolute bottom-0 left-0 h-[2px] bg-gold transition-all duration-300 ${isActive ? "w-full" : "w-0 group-hover:w-full"}`} />
+              </Link>
+            );
+          })}
         </nav>
 
         <button className="block md:hidden bg-transparent border-none cursor-pointer z-[1001] p-2 w-12 h-12 relative" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle menu">
@@ -64,16 +67,19 @@ export default function Navbar() {
         </button>
 
         <nav className={`fixed inset-0 w-full h-screen bg-background-dark/95 backdrop-blur-md flex flex-col justify-center items-center gap-8 z-[1000] transition-all duration-300 ${mobileMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}>
-          {navLinks.map((link, index) => (
-            <Link
-              key={link.path}
-              href={link.path}
-              className={`font-heading text-3xl font-bold transition-all duration-300 ${mobileMenuOpen ? "translate-y-0 opacity-100" : "translate-y-5 opacity-0"} ${link.path !== "/" && pathname.startsWith(link.path) ? "text-gold-light" : "text-text-primary"}`}
-              style={{ transitionDelay: mobileMenuOpen ? `${(index + 1) * 100}ms` : "0ms" }}
-              onClick={closeMobileMenu}>
-              {link.name}
-            </Link>
-          ))}
+          {navLinks.map((link, index) => {
+            const isActive = pathname === link.path || (link.path !== "/" && pathname.startsWith(link.path));
+            return (
+              <Link
+                key={link.path}
+                href={link.path}
+                className={`font-heading text-3xl font-bold transition-all duration-300 ${mobileMenuOpen ? "translate-y-0 opacity-100" : "translate-y-5 opacity-0"} ${isActive ? "text-gold-light" : "text-text-primary"}`}
+                style={{ transitionDelay: mobileMenuOpen ? `${(index + 1) * 100}ms` : "0ms" }}
+                onClick={closeMobileMenu}>
+                {link.name}
+              </Link>
+            );
+          })}
         </nav>
       </div>
     </header>

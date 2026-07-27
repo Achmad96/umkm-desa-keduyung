@@ -31,7 +31,7 @@ export default async function HomePage() {
               imageSrc="/images/village-landscape.png"
               imageAlt="Pemandangan Desa Keduyung"
               title="Profil Desa"
-              description="Desa Keduyung memiliki sejarah unik yang berawal dari kisah Den Bagus dan Den Ayu. Kini, desa seluas 217,51 hektar ini dihuni oleh sekitar 1.371 jiwa dan berbatasan langsung dengan Sungai Bengawan Solo, menghadirkan potensi sumber daya yang berlimpah."
+              description="Desa Keduyung memiliki sejarah unik yang berawal dari kisah Den Bagus dan Den Ayu. Kini, desa seluas 218 hektar ini dihuni oleh sekitar 1.371 jiwa dan berbatasan langsung dengan Sungai Bengawan Solo, menghadirkan potensi sumber daya yang berlimpah."
               linkHref="/profil-desa"
               linkText="Selengkapnya"
             />

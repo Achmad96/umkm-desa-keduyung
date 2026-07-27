@@ -1,10 +1,9 @@
-import AnimatedNumber from './AnimatedNumber';
+import AnimatedNumber from "./AnimatedNumber";
 
 export default function StatsBar() {
   return (
     <div className="w-full max-w-[1200px] -mt-[40px] mb-10 mx-auto px-8 relative z-20">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 bg-primary-dark/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-[0_10px_30px_rgba(0,0,0,0.3)]">
-        
         <div className="flex items-center gap-5 p-4 rounded-xl bg-white/5 border border-white/5 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(214,158,46,0.15)] hover:bg-white/10">
           <div className="shrink-0 flex items-center justify-center w-16 h-16 rounded-full bg-gold/10">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-gold">
@@ -34,7 +33,7 @@ export default function StatsBar() {
           </div>
           <div className="flex flex-col">
             <h3 className="font-heading text-3xl font-bold bg-gradient-to-r from-white to-gold bg-clip-text text-transparent m-0 mb-1 leading-[1.2]">
-              <AnimatedNumber value={217} suffix="+" /> Hektar
+              <AnimatedNumber value={218} suffix="+" /> Hektar
             </h3>
             <p className="font-body text-sm text-slate-300 m-0">Potensi Agraris</p>
           </div>
@@ -54,7 +53,6 @@ export default function StatsBar() {
             <p className="font-body text-sm text-slate-300 m-0">Pusat Perdagangan Lokal</p>
           </div>
         </div>
-
       </div>
     </div>
   );

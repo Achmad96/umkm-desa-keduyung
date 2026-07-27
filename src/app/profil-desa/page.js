@@ -1,4 +1,4 @@
-'use client';
+// 'use client';
 
 import React from 'react';
 import Link from 'next/link';
@@ -8,7 +8,7 @@ import AnimatedNumber from '@/components/AnimatedNumber';
 export default function ProfilDesaPage() {
   return (
     <main>
-      <header 
+      <header
         className="relative min-h-[40vh] flex items-center justify-center text-center bg-cover bg-center bg-fixed"
         style={{ backgroundImage: "url('/images/village-landscape.png')" }}
       >
@@ -30,22 +30,22 @@ export default function ProfilDesaPage() {
       <section className="py-20">
         <div className="max-w-[1200px] mx-auto px-6">
           <div className="flex flex-col gap-16">
-            <SectionCard 
+            <SectionCard
               title="Sejarah Singkat & Geografis"
               imageSrc="/images/village-landscape.png"
               imageAlt="Geografis Desa Keduyung"
-              description="Nama Keduyung berasal dari kisah legenda Den Bagus dan Den Ayu, di mana sebuah 'Dayung' perahu mereka ditemukan setelah terdampar. Secara geografis, Desa Keduyung terletak di wilayah dataran rendah dengan luas 217,51 hektar. Desa ini berbatasan dengan Desa Pesanggrahan di utara, Sungai Bengawan Solo di timur, Desa Centini di selatan, dan Desa Mlangi di barat."
+              description="Nama Keduyung berasal dari kisah legenda Den Bagus dan Den Ayu, di mana sebuah 'Dayung' perahu mereka ditemukan setelah terdampar. Secara geografis, Desa Keduyung terletak di wilayah dataran rendah dengan luas 218 hektar. Desa ini berbatasan dengan Desa Pesanggrahan di utara, Sungai Bengawan Solo di timur, Desa Centini di selatan, dan Desa Mlangi di barat."
             />
-            
-            <SectionCard 
+
+            <SectionCard
               title="Kepengurusan"
               imageSrc="/images/jasa-service.png"
               imageAlt="Kepengurusan Desa Keduyung"
               description="Pemerintahan Desa Keduyung saat ini dipimpin oleh Kepala Desa Angga Pradita David Hamka, SE. Wilayah administratif desa terbagi menjadi 2 Dusun yaitu Dusun Keduyung dan Dusun Misuwur, yang mencakup 4 RW dan 9 RT."
               reversed={true}
             />
-            
-            <SectionCard 
+
+            <SectionCard
               title="Demografi"
               imageSrc="/images/hero-village.png"
               imageAlt="Demografi Desa Keduyung"
@@ -60,19 +60,19 @@ export default function ProfilDesaPage() {
         <div className="max-w-[1400px] mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-20">
             <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-10 text-center transition-transform duration-300 hover:-translate-y-1 hover:bg-white/10">
-              <div className="font-heading text-5xl font-extrabold bg-gradient-to-br from-gold to-[#f6e05e] bg-clip-text text-transparent mb-2"><AnimatedNumber value={217.5} decimal={true} suffix=" Ha" /></div>
+              <div className="font-heading text-5xl font-extrabold bg-gradient-to-br from-gold to-[#f6e05e] bg-clip-text text-transparent mb-2"><AnimatedNumber value={218} decimal={false} suffix=" Ha" duration={1500} /></div>
               <div className="text-lg text-white font-medium">Luas Wilayah</div>
             </div>
             <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-10 text-center transition-transform duration-300 hover:-translate-y-1 hover:bg-white/10">
-              <div className="font-heading text-5xl font-extrabold bg-gradient-to-br from-gold to-[#f6e05e] bg-clip-text text-transparent mb-2"><AnimatedNumber value={1371} /></div>
+              <div className="font-heading text-5xl font-extrabold bg-gradient-to-br from-gold to-[#f6e05e] bg-clip-text text-transparent mb-2"><AnimatedNumber value={1230} decimal={false} duration={1500} /></div>
               <div className="text-lg text-white font-medium">Jumlah Penduduk</div>
             </div>
             <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-10 text-center transition-transform duration-300 hover:-translate-y-1 hover:bg-white/10">
-              <div className="font-heading text-5xl font-extrabold bg-gradient-to-br from-gold to-[#f6e05e] bg-clip-text text-transparent mb-2"><AnimatedNumber value={374} /></div>
+              <div className="font-heading text-5xl font-extrabold bg-gradient-to-br from-gold to-[#f6e05e] bg-clip-text text-transparent mb-2"><AnimatedNumber value={374} decimal={false} duration={1500} /></div>
               <div className="text-lg text-white font-medium">Kepala Keluarga</div>
             </div>
             <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-10 text-center transition-transform duration-300 hover:-translate-y-1 hover:bg-white/10">
-              <div className="font-heading text-5xl font-extrabold bg-gradient-to-br from-gold to-[#f6e05e] bg-clip-text text-transparent mb-2"><AnimatedNumber value={41} /></div>
+              <div className="font-heading text-5xl font-extrabold bg-gradient-to-br from-gold to-[#f6e05e] bg-clip-text text-transparent mb-2"><AnimatedNumber value={41} decimal={false} duration={1500} /></div>
               <div className="text-lg text-white font-medium">Pengusaha UMKM</div>
             </div>
           </div>
