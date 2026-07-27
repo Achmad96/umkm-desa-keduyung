@@ -39,7 +39,7 @@ export default function Navbar() {
     <header className={`sticky top-0 z-[1000] h-[72px] w-full transition-all duration-300 ${scrolled ? "bg-background-dark/80 backdrop-blur-lg border-b border-border shadow-md" : "bg-transparent"}`}>
       <div className="container h-full flex items-center justify-between mx-auto px-4 lg:px-8">
         <Link href="/" className="flex items-center gap-2 z-[1001]" onClick={closeMobileMenu}>
-          <Image src={logoImage} alt="Desa Keduyung Logo" width={40} height={40} className="object-contain rounded-sm" />
+          <Image src={logoImage} alt="Desa Keduyung Logo" width={40} height={40} className="object-contain rounded-sm" style={{ width: 'auto', height: 'auto' }} />
           <div className="flex flex-col">
             <span className="font-heading font-bold text-xl tracking-wider text-text-primary leading-tight">DESA KEDUYUNG</span>
             <span className="text-xs text-gold uppercase tracking-widest font-medium">Kumpulan UMKM</span>

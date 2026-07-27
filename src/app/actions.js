@@ -8,27 +8,19 @@ import { createSession, getSession } from '@/lib/auth';
 
 export async function loginUser(username, password) {
   try {
-    const { data: admin, error } = await supabaseAdmin
-      .from('admins')
-      .select('*')
-      .eq('username', username)
-      .maybeSingle();
+    const envUsername = process.env.ADMIN_USERNAME;
+    const envPassword = process.env.ADMIN_PASSWORD;
 
-    if (error) {
-      console.error('Error querying Supabase for admin login:', error);
-      return { success: false, error: 'Terjadi kesalahan pada server.' };
+    if (!envUsername || !envPassword) {
+      console.error('Admin credentials not set in environment variables');
+      return { success: false, error: 'Terjadi kesalahan konfigurasi server.' };
     }
 
-    if (!admin) {
+    if (username !== envUsername || password !== envPassword) {
       return { success: false, error: 'Username atau password salah.' };
     }
 
-    const isValid = await bcrypt.compare(password, admin.password_hash);
-    if (!isValid) {
-      return { success: false, error: 'Username atau password salah.' };
-    }
-
-    await createSession({ id: admin.id, username: admin.username });
+    await createSession({ id: 'admin-env', username: envUsername });
     return { success: true };
   } catch (error) {
     console.error('Login error:', error);

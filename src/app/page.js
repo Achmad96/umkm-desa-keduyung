@@ -8,7 +8,8 @@ import { getUmkms } from '@/lib/db';
 
 export default async function HomePage() {
   const umkms = await getUmkms();
-  const featuredUmkms = umkms.slice(0, 3);
+  const featuredSlugs = ['dapur-rere', 'srawung-coffee-roastery', 'keripik-telur-asin-tiara'];
+  const featuredUmkms = umkms.filter(umkm => featuredSlugs.includes(umkm.slug));
 
   return (
     <main>
@@ -37,7 +38,7 @@ export default async function HomePage() {
             />
 
             <SectionCard
-              imageSrc="/images/nasi-pecel.png"
+              imageSrc={featuredUmkms[0]?.imageSrc || "/images/nasi-pecel.png"}
               imageAlt="UMKM Unggulan Keduyung"
               title="UMKM Unggulan"
               description="Potensi ekonomi Desa Keduyung didukung oleh berbagai Usaha Mikro, Kecil, dan Menengah (UMKM) yang terus berkembang. Dari kuliner tradisional hingga kerajinan tangan, produk kami siap bersaing di pasar yang lebih luas."
