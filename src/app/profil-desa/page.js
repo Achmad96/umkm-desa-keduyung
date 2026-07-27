@@ -49,7 +49,7 @@ export default function ProfilDesaPage() {
               title="Demografi"
               imageSrc="/images/hero-village.png"
               imageAlt="Demografi Desa Keduyung"
-              description="Desa Keduyung memiliki populasi penduduk sebanyak 1.371 jiwa, yang terdiri dari 667 laki-laki dan 678 perempuan, serta 374 Kepala Keluarga (KK). Sebagian besar penduduk desa ini bermata pencaharian sebagai buruh tani (573 orang) dan buruh migran (165 orang)."
+              description="Desa Keduyung memiliki populasi penduduk sebanyak 1.371 jiwa, yang terdiri dari 667 laki-laki dan 678 perempuan, serta 403 Kepala Keluarga (KK). Sebagian besar penduduk desa ini bermata pencaharian sebagai buruh tani (573 orang) dan buruh migran (165 orang)."
               accentColor="var(--color-gold)"
             />
           </div>
@@ -68,7 +68,7 @@ export default function ProfilDesaPage() {
               <div className="text-lg text-white font-medium">Jumlah Penduduk</div>
             </div>
             <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-10 text-center transition-transform duration-300 hover:-translate-y-1 hover:bg-white/10">
-              <div className="font-heading text-5xl font-extrabold bg-gradient-to-br from-gold to-[#f6e05e] bg-clip-text text-transparent mb-2"><AnimatedNumber value={374} decimal={false} duration={1500} /></div>
+              <div className="font-heading text-5xl font-extrabold bg-gradient-to-br from-gold to-[#f6e05e] bg-clip-text text-transparent mb-2"><AnimatedNumber value={403} decimal={false} duration={1500} /></div>
               <div className="text-lg text-white font-medium">Kepala Keluarga</div>
             </div>
             <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-10 text-center transition-transform duration-300 hover:-translate-y-1 hover:bg-white/10">
