@@ -1,9 +1,12 @@
-import { useState, useTransition } from "react";
+import { useState, useTransition, useRef } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import { loginUser } from "@/app/actions";
 
 export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [captchaToken, setCaptchaToken] = useState("");
+  const recaptchaRef = useRef(null);
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
 
@@ -13,12 +16,21 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
     e.preventDefault();
     setError("");
 
+    if (!captchaToken) {
+      setError("Silakan verifikasi CAPTCHA terlebih dahulu.");
+      return;
+    }
+
     startTransition(async () => {
-      const result = await loginUser(username, password);
+      const result = await loginUser(username, password, captchaToken);
       if (result.success) {
         onLoginSuccess();
       } else {
         setError(result.error);
+        if (recaptchaRef.current) {
+          recaptchaRef.current.reset();
+        }
+        setCaptchaToken("");
       }
     });
   };
@@ -74,12 +86,20 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
             />
           </div>
 
+          <div className="flex justify-center my-4">
+            <ReCAPTCHA
+              ref={recaptchaRef}
+              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+              onChange={(token) => setCaptchaToken(token)}
+              theme="dark"
+            />
+          </div>
+
           <div className="flex justify-between items-center text-sm font-body">
             <label className="flex items-center gap-2 cursor-pointer text-slate-300">
               <input type="checkbox" className="rounded border-white/20 bg-white/5 accent-gold" />
               Ingat saya
             </label>
-            {/* <a href="#" className="text-gold hover:text-gold-light transition-colors text-sm">Lupa password?</a> */}
           </div>
 
           <button
@@ -89,13 +109,6 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
             {isPending ? "Memeriksa..." : "Masuk"}
           </button>
         </form>
-
-        {/* <p className="text-center text-slate-400 font-body text-sm mt-6">
-          Belum punya akun?{" "}
-          <a href="#" className="text-gold hover:text-gold-light transition-colors font-medium">
-            Hubungi Admin Desa
-          </a>
-        </p> */}
       </div>
     </div>
   );
