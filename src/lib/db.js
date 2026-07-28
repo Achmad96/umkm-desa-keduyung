@@ -9,7 +9,7 @@ function formatImageSrc(imgSrc) {
   return `${supabaseUrl}/storage/v1/object/public/umkm-images/${imgSrc}`;
 }
 
-export async function getUmkms() {
+export async function getUMKMs() {
   await connection();
   try {
     const { data, error } = await supabase
@@ -32,7 +32,7 @@ export async function getUmkms() {
   }
 }
 
-export async function getUmkmBySlug(slug) {
+export async function getUMKMBySlug(slug) {
   await connection();
   try {
     const { data: umkm, error } = await supabase
@@ -47,7 +47,7 @@ export async function getUmkmBySlug(slug) {
     }
 
     if (!umkm) return null;
-    
+
     return {
       ...umkm,
       imageSrc: formatImageSrc(umkm.imgSrc)
@@ -58,7 +58,7 @@ export async function getUmkmBySlug(slug) {
   }
 }
 
-export async function getUmkmById(id) {
+export async function getUMKMById(id) {
   await connection();
   try {
     const { data: umkm, error } = await supabase
@@ -73,7 +73,7 @@ export async function getUmkmById(id) {
     }
 
     if (!umkm) return null;
-    
+
     return {
       ...umkm,
       imageSrc: formatImageSrc(umkm.imgSrc)

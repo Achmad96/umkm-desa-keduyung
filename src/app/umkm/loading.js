@@ -1,11 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
-import UmkmCardSkeleton from '@/components/UmkmCardSkeleton';
+import UMKMCardSkeleton from '@/components/UMKMCardSkeleton';
 
 export default function Loading() {
   return (
     <div className="min-h-screen pb-16">
-      <header 
+      <header
         className="h-[40vh] min-h-[350px] bg-cover bg-center flex flex-col items-center justify-center text-center p-8 mb-12"
         style={{ backgroundImage: "linear-gradient(to bottom, rgba(26, 54, 93, 0.7), rgba(15, 23, 42, 0.9)), url('/images/hero-village.png')" }}
       >
@@ -40,14 +40,14 @@ export default function Loading() {
         {/* Skeleton for Categories */}
         <div className="flex gap-4 overflow-x-auto pb-4 mb-8 sticky top-4 z-10">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-             <div key={i} className="h-12 w-28 rounded-full bg-white/10 animate-pulse shrink-0"></div>
+            <div key={i} className="h-12 w-28 rounded-full bg-white/10 animate-pulse shrink-0"></div>
           ))}
         </div>
 
-        {/* Skeleton for Umkm List */}
+        {/* Skeleton for UMKM List */}
         <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-8 mb-12">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <UmkmCardSkeleton key={i} />
+            <UMKMCardSkeleton key={i} />
           ))}
         </div>
       </main>

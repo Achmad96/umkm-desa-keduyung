@@ -1,11 +1,12 @@
-import { getUmkmBySlug } from '@/lib/db';
+import { getUMKMBySlug } from '@/lib/db';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import GalleryLightbox from '@/components/GalleryLightbox';
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const umkm = await getUmkmBySlug(slug);
+  const umkm = await getUMKMBySlug(slug);
   if (!umkm) return { title: 'UMKM Tidak Ditemukan' };
 
   return {
@@ -14,9 +15,9 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default async function UmkmDetailPage({ params }) {
+export default async function UMKMDetailPage({ params }) {
   const { slug } = await params;
-  const umkm = await getUmkmBySlug(slug);
+  const umkm = await getUMKMBySlug(slug);
 
   if (!umkm) {
     notFound();
@@ -62,12 +63,24 @@ export default async function UmkmDetailPage({ params }) {
       <main className="max-w-[1200px] mx-auto px-8 -mt-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-          <div className="lg:col-span-2">
-            <section className="bg-white/5 backdrop-blur-md border border-white/5 rounded-2xl p-8 mb-8">
+          <div className="lg:col-span-2 space-y-8">
+            <section className="bg-white/5 backdrop-blur-md border border-white/5 rounded-2xl p-8">
               <h2 className="font-heading text-2xl text-white mb-4">Tentang Usaha</h2>
               <p className="text-slate-300 font-body leading-relaxed text-lg whitespace-pre-line">
                 {umkm.deskripsi}
               </p>
+            </section>
+
+            <section className="bg-white/5 backdrop-blur-md border border-white/5 rounded-2xl p-8">
+              <h2 className="font-heading text-2xl text-white mb-6">Galeri Produk / Tempat</h2>
+              <GalleryLightbox
+                images={[
+                  umkm.imageSrc || '/images/village-landscape.png',
+                  // Fallbacks for the carousel effect since currently DB only holds 1 image
+                  '/images/village-landscape.png',
+                  '/images/hero-bg.jpg'
+                ]}
+              />
             </section>
           </div>
 

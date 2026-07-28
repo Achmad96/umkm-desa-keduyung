@@ -3,16 +3,16 @@ import Link from 'next/link';
 import HeroSection from '@/components/HeroSection';
 import StatsBar from '@/components/StatsBar';
 import SectionCard from '@/components/SectionCard';
-import UmkmCard from '@/components/UmkmCard';
-import { getUmkms } from '@/lib/db';
+import UMKMCard from '@/components/UMKMCard';
+import { getUMKMs } from '@/lib/db';
 import { getSession } from '@/lib/auth';
 
 export default async function HomePage() {
-  const umkms = await getUmkms();
+  const umkms = await getUMKMs();
   const session = await getSession();
   const isAdmin = !!session;
   const featuredSlugs = ['dapur-rere', 'srawung-coffee-roastery', 'keripik-telur-asin-tiara'];
-  const featuredUmkms = umkms.filter(umkm => featuredSlugs.includes(umkm.slug));
+  const featuredUMKMs = umkms.filter(umkm => featuredSlugs.includes(umkm.slug));
 
   return (
     <main>
@@ -41,7 +41,7 @@ export default async function HomePage() {
             />
 
             <SectionCard
-              imageSrc={featuredUmkms[0]?.imageSrc || "/images/nasi-pecel.png"}
+              imageSrc={featuredUMKMs[0]?.imageSrc || "/images/nasi-pecel.png"}
               imageAlt="UMKM Unggulan Keduyung"
               title="UMKM Unggulan"
               description="Potensi ekonomi Desa Keduyung didukung oleh berbagai Usaha Mikro, Kecil, dan Menengah (UMKM) yang terus berkembang. Dari kuliner tradisional hingga kerajinan tangan, produk kami siap bersaing di pasar yang lebih luas."
@@ -66,8 +66,8 @@ export default async function HomePage() {
           </div>
 
           <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-8 mt-8">
-            {featuredUmkms.map((umkm) => (
-              <UmkmCard
+            {featuredUMKMs.map((umkm) => (
+              <UMKMCard
                 key={umkm.id}
                 id={umkm.id}
                 slug={umkm.slug}

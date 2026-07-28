@@ -1,14 +1,14 @@
-import UmkmList from '../../components/UmkmList';
-import { getUmkms, getUmkmBySlug } from '@/lib/db';
+import UMKMList from '../../components/UMKMList';
+import { getUMKMs, getUMKMBySlug } from '@/lib/db';
 import { getSession } from '@/lib/auth';
 import Link from 'next/link';
 
-export default async function UmkmPage() {
-  const umkms = await getUmkms();
+export default async function UMKMPage() {
+  const umkms = await getUMKMs();
   const session = await getSession();
   const isAdmin = !!session;
   // Fetch Dapur Rere as the featured UMKM for this page, or fallback to the first UMKM if not found
-  const featuredUmkm = await getUmkmBySlug('dapur-rere') || umkms[0];
+  const featuredUMKM = await getUMKMBySlug('dapur-rere') || umkms[0];
 
   return (
     <div className="min-h-screen pb-16">
@@ -29,7 +29,7 @@ export default async function UmkmPage() {
       </header>
 
       <main className="max-w-[1200px] mx-auto px-8">
-        {featuredUmkm && (
+        {featuredUMKM && (
           <section className="bg-white/5 backdrop-blur-md border border-white/5 rounded-2xl p-8 mb-16 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div className="w-full h-[300px] rounded-lg overflow-hidden relative">
               <div className="absolute top-4 right-4 bg-gold text-background-dark px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2">
@@ -39,25 +39,25 @@ export default async function UmkmPage() {
                 FEATURED
               </div>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={featuredUmkm.imageSrc || "/images/village-landscape.png"} alt={featuredUmkm.namaUsaha} className="w-full h-full object-cover" />
+              <img src={featuredUMKM.imageSrc || "/images/village-landscape.png"} alt={featuredUMKM.namaUsaha} className="w-full h-full object-cover" />
             </div>
             <div>
-              <h2 className="font-heading text-4xl text-white mb-4">{featuredUmkm.namaUsaha}</h2>
-              <p className="text-slate-400 leading-relaxed mb-8">{featuredUmkm.deskripsi}</p>
+              <h2 className="font-heading text-4xl text-white mb-4">{featuredUMKM.namaUsaha}</h2>
+              <p className="text-slate-400 leading-relaxed mb-8">{featuredUMKM.deskripsi}</p>
               <div className="flex gap-4 flex-wrap">
-                {featuredUmkm.whatsappLink && (
-                  <a href={featuredUmkm.whatsappLink} target="_blank" rel="noopener noreferrer" className="px-6 py-3 rounded-lg font-heading font-semibold transition-all duration-300 bg-primary text-white hover:bg-primary-dark hover:-translate-y-0.5 inline-block">WhatsApp</a>
+                {featuredUMKM.whatsappLink && (
+                  <a href={featuredUMKM.whatsappLink} target="_blank" rel="noopener noreferrer" className="px-6 py-3 rounded-lg font-heading font-semibold transition-all duration-300 bg-primary text-white hover:bg-primary-dark hover:-translate-y-0.5 inline-block">WhatsApp</a>
                 )}
-                {featuredUmkm.telepon && featuredUmkm.telepon !== '-' && (
-                  <a href={`tel:${featuredUmkm.telepon}`} className="px-6 py-3 rounded-lg font-heading font-semibold transition-all duration-300 bg-transparent text-white border border-white/20 hover:bg-white/5 hover:border-white inline-block">Telepon</a>
+                {featuredUMKM.telepon && featuredUMKM.telepon !== '-' && (
+                  <a href={`tel:${featuredUMKM.telepon}`} className="px-6 py-3 rounded-lg font-heading font-semibold transition-all duration-300 bg-transparent text-white border border-white/20 hover:bg-white/5 hover:border-white inline-block">Telepon</a>
                 )}
-                <Link href={`/umkm/${featuredUmkm.slug}`} className="px-6 py-3 rounded-lg font-heading font-semibold transition-all duration-300 bg-gold text-background-dark hover:bg-[#d49929] hover:-translate-y-0.5 inline-block">Lihat Detail</Link>
+                <Link href={`/umkm/${featuredUMKM.slug}`} className="px-6 py-3 rounded-lg font-heading font-semibold transition-all duration-300 bg-gold text-background-dark hover:bg-[#d49929] hover:-translate-y-0.5 inline-block">Lihat Detail</Link>
               </div>
             </div>
           </section>
         )}
 
-        <UmkmList initialUmkms={umkms} isAdmin={isAdmin} />
+        <UMKMList initialUMKMs={umkms} isAdmin={isAdmin} />
       </main>
     </div>
   );

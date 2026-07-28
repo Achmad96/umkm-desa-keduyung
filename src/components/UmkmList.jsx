@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import UmkmCard from "./UmkmCard";
+import UMKMCard from "./UMKMCard";
 
 const categories = ["Semua", "Makanan", "Camilan", "Minuman", "Fashion", "Kerajinan", "Jasa"];
 
-export default function UmkmList({ initialUmkms, isAdmin = false }) {
+export default function UMKMList({ initialUMKMs, isAdmin = false }) {
   const [activeFilter, setActiveFilter] = useState("Semua");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
@@ -15,10 +15,10 @@ export default function UmkmList({ initialUmkms, isAdmin = false }) {
     setCurrentPage(1);
   };
 
-  const filteredUmkm = activeFilter === "Semua" ? initialUmkms : initialUmkms.filter((item) => item.kategori === activeFilter);
+  const filteredUMKM = activeFilter === "Semua" ? initialUMKMs : initialUMKMs.filter((item) => item.kategori === activeFilter);
 
-  const totalPages = Math.ceil(filteredUmkm.length / itemsPerPage);
-  const paginatedUmkm = filteredUmkm.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const totalPages = Math.ceil(filteredUMKM.length / itemsPerPage);
+  const paginatedUMKM = filteredUMKM.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
     <>
@@ -35,11 +35,11 @@ export default function UmkmList({ initialUmkms, isAdmin = false }) {
         ))}
       </div>
 
-      {paginatedUmkm.length > 0 ? (
+      {paginatedUMKM.length > 0 ? (
         <>
           <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-8 mb-12">
-            {paginatedUmkm.map((umkm) => (
-              <UmkmCard
+            {paginatedUMKM.map((umkm) => (
+              <UMKMCard
                 key={umkm.id}
                 id={umkm.id}
                 slug={umkm.slug}

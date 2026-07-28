@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import CategoryCard from '../../components/CategoryCard';
 import LoginModal from '../../components/LoginModal';
-import { registerUmkm, checkSessionAction } from '../actions';
+import { registerUMKM, checkSessionAction } from '../actions';
 
 export default function PendaftaranPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -44,7 +44,7 @@ export default function PendaftaranPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = new FormData(e.target);
-    const result = await registerUmkm(form);
+    const result = await registerUMKM(form);
 
     if (result.success) {
       alert('Terima kasih! Pendaftaran UMKM Anda telah berhasil dikirim dan akan segera kami proses.');

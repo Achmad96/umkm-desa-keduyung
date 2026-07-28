@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
 import { useState, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { deleteUmkm } from "@/app/actions";
+import { deleteUMKM } from "@/app/actions";
 import { useRouter } from "next/navigation";
 
-export default function UmkmCard({ id, slug, imageSrc, name, description, category, whatsappLink, phoneNumber, shopeeLink, tiktokLink, mapsLink, isAdmin }) {
+export default function UMKMCard({ id, slug, imageSrc, name, description, category, whatsappLink, phoneNumber, shopeeLink, tiktokLink, mapsLink, isAdmin }) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -19,7 +19,7 @@ export default function UmkmCard({ id, slug, imageSrc, name, description, catego
   const confirmDelete = () => {
     setIsDeleting(true);
     startTransition(async () => {
-      const result = await deleteUmkm(id);
+      const result = await deleteUMKM(id);
       if (result.success) {
         router.refresh();
       } else {
@@ -31,7 +31,8 @@ export default function UmkmCard({ id, slug, imageSrc, name, description, catego
   };
 
   return (
-    <div className={`flex flex-col bg-primary-dark/40 backdrop-blur-md border border-white/5 rounded-2xl overflow-hidden transition-all duration-300 group hover:-translate-y-2 hover:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.5),0_10px_10px_-5px_rgba(0,0,0,0.3)] relative ${isDeleting ? 'opacity-50 pointer-events-none' : ''}`}>
+    <div
+      className={`flex flex-col bg-primary-dark/40 backdrop-blur-md border border-white/5 rounded-2xl overflow-hidden transition-all duration-300 group hover:-translate-y-2 hover:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.5),0_10px_10px_-5px_rgba(0,0,0,0.3)] relative ${isDeleting ? "opacity-50 pointer-events-none" : ""}`}>
       {/* Delete confirmation overlay */}
       {showConfirm && (
         <div className="absolute inset-0 z-20 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center rounded-2xl">
@@ -41,20 +42,15 @@ export default function UmkmCard({ id, slug, imageSrc, name, description, catego
             </svg>
           </div>
           <h4 className="font-heading text-lg text-white mb-2">Hapus UMKM?</h4>
-          <p className="text-slate-300 text-sm font-body mb-4">Anda yakin ingin menghapus <strong className="text-white">{name}</strong>? Tindakan ini tidak dapat dibatalkan.</p>
+          <p className="text-slate-300 text-sm font-body mb-4">
+            Anda yakin ingin menghapus <strong className="text-white">{name}</strong>? Tindakan ini tidak dapat dibatalkan.
+          </p>
           <div className="flex gap-3">
-            <button
-              onClick={() => setShowConfirm(false)}
-              className="px-5 py-2.5 rounded-lg bg-white/10 border border-white/10 text-white font-heading font-medium text-sm cursor-pointer hover:bg-white/20 transition-all"
-            >
+            <button onClick={() => setShowConfirm(false)} className="px-5 py-2.5 rounded-lg bg-white/10 border border-white/10 text-white font-heading font-medium text-sm cursor-pointer hover:bg-white/20 transition-all">
               Batal
             </button>
-            <button
-              onClick={confirmDelete}
-              disabled={isPending}
-              className="px-5 py-2.5 rounded-lg bg-red-500 text-white font-heading font-medium text-sm cursor-pointer hover:bg-red-600 transition-all disabled:opacity-70"
-            >
-              {isPending ? 'Menghapus...' : 'Ya, Hapus'}
+            <button onClick={confirmDelete} disabled={isPending} className="px-5 py-2.5 rounded-lg bg-red-500 text-white font-heading font-medium text-sm cursor-pointer hover:bg-red-600 transition-all disabled:opacity-70">
+              {isPending ? "Menghapus..." : "Ya, Hapus"}
             </button>
           </div>
         </div>
@@ -63,20 +59,12 @@ export default function UmkmCard({ id, slug, imageSrc, name, description, catego
       {/* Admin action buttons */}
       {isAdmin && (
         <div className="absolute top-4 left-4 z-10 flex gap-2">
-          <Link
-            href={`/umkm/edit/${id}`}
-            className="flex items-center justify-center w-9 h-9 rounded-full bg-gold/90 text-white hover:bg-gold hover:scale-110 transition-all duration-200 shadow-lg no-underline"
-            aria-label={`Edit ${name}`}
-          >
+          <Link href={`/umkm/edit/${id}`} className="flex items-center justify-center w-9 h-9 rounded-full bg-gold/90 text-white hover:bg-gold hover:scale-110 transition-all duration-200 shadow-lg no-underline" aria-label={`Edit ${name}`}>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
             </svg>
           </Link>
-          <button
-            onClick={handleDelete}
-            className="flex items-center justify-center w-9 h-9 rounded-full bg-red-500/90 text-white hover:bg-red-500 hover:scale-110 transition-all duration-200 shadow-lg border-none cursor-pointer"
-            aria-label={`Hapus ${name}`}
-          >
+          <button onClick={handleDelete} className="flex items-center justify-center w-9 h-9 rounded-full bg-red-500/90 text-white hover:bg-red-500 hover:scale-110 transition-all duration-200 shadow-lg border-none cursor-pointer" aria-label={`Hapus ${name}`}>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
             </svg>
@@ -85,9 +73,7 @@ export default function UmkmCard({ id, slug, imageSrc, name, description, catego
       )}
 
       <Link href={`/umkm/${slug}`} className="relative w-full aspect-[4/3] overflow-hidden block">
-        <Image 
-          src={imageSrc || '/images/village-landscape.png'} 
-          alt={name || 'UMKM Image'} fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+        <Image src={imageSrc || "/images/village-landscape.png"} alt={name || "UMKM Image"} fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
         <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-slate-900 to-transparent pointer-events-none"></div>
         <div className="absolute top-4 right-4 bg-accent text-white font-body text-xs font-semibold px-3 py-1 rounded-full shadow-md">{category}</div>
       </Link>

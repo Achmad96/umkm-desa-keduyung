@@ -4,7 +4,6 @@ const next = require('next');
 
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = 'localhost';
-// Parse the initial port to ensure it's a number
 let initialPort = parseInt(process.env.PORT, 10) || 3000;
 
 const app = next({ dev, hostname, port: initialPort });
@@ -22,7 +21,6 @@ app.prepare().then(() => {
     }
   });
 
-  // Recursive function to test ports
   const startServer = (portToTry) => {
     server.listen(portToTry, (err) => {
       if (err) {
@@ -33,22 +31,18 @@ app.prepare().then(() => {
     });
   };
 
-  // Intercept the error event to catch port conflicts
   server.on('error', (e) => {
     if (e.code === 'EADDRINUSE') {
       console.warn(`> Port ${initialPort} is in use. Trying port ${initialPort + 1}...`);
-      initialPort += 1; // Increment the port
+      initialPort += 1;
 
-      // Update Next.js internal port reference for absolute URLs
       app.port = initialPort;
 
-      // Try again with the new port
       startServer(initialPort);
     } else {
       console.error('> Server error:', e);
     }
   });
 
-  // Start the initial attempt
   startServer(initialPort);
 });

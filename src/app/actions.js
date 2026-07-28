@@ -3,16 +3,15 @@
 import { supabaseAdmin } from '@/lib/supabase';
 import { revalidatePath } from 'next/cache';
 import crypto from 'crypto';
-import bcrypt from 'bcryptjs';
 import { createSession, getSession } from '@/lib/auth';
-import { getUmkmById } from '@/lib/db';
+import { getUMKMById } from '@/lib/db';
 
-export async function getUmkmByIdAction(id) {
+export async function getUMKMByIdAction(id) {
   const session = await getSession();
   const isAdmin = !!session;
 
   try {
-    const umkm = await getUmkmById(id);
+    const umkm = await getUMKMById(id);
     if (!umkm) {
       return { success: false, error: 'UMKM tidak ditemukan.', isAdmin };
     }
@@ -50,7 +49,7 @@ export async function loginUser(username, password) {
   }
 }
 
-export async function registerUmkm(formData) {
+export async function registerUMKM(formData) {
   const session = await getSession();
   if (!session) {
     return { success: false, error: 'Unauthorized: Harap login terlebih dahulu.' };
@@ -167,7 +166,7 @@ export async function registerUmkm(formData) {
   }
 }
 
-export async function deleteUmkm(id) {
+export async function deleteUMKM(id) {
   const session = await getSession();
   if (!session) {
     return { success: false, error: 'Unauthorized: Harap login terlebih dahulu.' };
@@ -216,7 +215,7 @@ export async function deleteUmkm(id) {
   }
 }
 
-export async function updateUmkm(id, formData) {
+export async function updateUMKM(id, formData) {
   const session = await getSession();
   if (!session) {
     return { success: false, error: 'Unauthorized: Harap login terlebih dahulu.' };
