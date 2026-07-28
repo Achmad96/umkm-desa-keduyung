@@ -1,9 +1,12 @@
 import UmkmList from '../../components/UmkmList';
 import { getUmkms, getUmkmBySlug } from '@/lib/db';
+import { getSession } from '@/lib/auth';
 import Link from 'next/link';
 
 export default async function UmkmPage() {
   const umkms = await getUmkms();
+  const session = await getSession();
+  const isAdmin = !!session;
   // Fetch Dapur Rere as the featured UMKM for this page, or fallback to the first UMKM if not found
   const featuredUmkm = await getUmkmBySlug('dapur-rere') || umkms[0];
 
@@ -54,7 +57,7 @@ export default async function UmkmPage() {
           </section>
         )}
 
-        <UmkmList initialUmkms={umkms} />
+        <UmkmList initialUmkms={umkms} isAdmin={isAdmin} />
       </main>
     </div>
   );

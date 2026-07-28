@@ -38,6 +38,7 @@ export async function createSession(user) {
   const cookieStore = await cookies();
   cookieStore.set('session', session, {
     expires,
+    maxAge: 24 * 60 * 60,
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
@@ -55,3 +56,9 @@ export async function destroySession() {
     path: '/',
   });
 }
+
+export async function checkSession() {
+  const session = await getSession();
+  return { isAdmin: !!session };
+}
+

@@ -5,9 +5,12 @@ import StatsBar from '@/components/StatsBar';
 import SectionCard from '@/components/SectionCard';
 import UmkmCard from '@/components/UmkmCard';
 import { getUmkms } from '@/lib/db';
+import { getSession } from '@/lib/auth';
 
 export default async function HomePage() {
   const umkms = await getUmkms();
+  const session = await getSession();
+  const isAdmin = !!session;
   const featuredSlugs = ['dapur-rere', 'srawung-coffee-roastery', 'keripik-telur-asin-tiara'];
   const featuredUmkms = umkms.filter(umkm => featuredSlugs.includes(umkm.slug));
 
@@ -66,6 +69,7 @@ export default async function HomePage() {
             {featuredUmkms.map((umkm) => (
               <UmkmCard
                 key={umkm.id}
+                id={umkm.id}
                 slug={umkm.slug}
                 imageSrc={umkm.imageSrc}
                 name={umkm.namaUsaha}
@@ -76,6 +80,7 @@ export default async function HomePage() {
                 shopeeLink={umkm.shopeeLink}
                 tiktokLink={umkm.tiktokLink}
                 mapsLink={umkm.mapsLink}
+                isAdmin={isAdmin}
               />
             ))}
           </div>

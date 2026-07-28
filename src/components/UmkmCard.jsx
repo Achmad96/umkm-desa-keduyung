@@ -1,9 +1,89 @@
+'use client';
+
+import { useState, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { deleteUmkm } from "@/app/actions";
+import { useRouter } from "next/navigation";
 
-export default function UmkmCard({ id, slug, imageSrc, name, description, category, whatsappLink, phoneNumber, shopeeLink, tiktokLink, mapsLink }) {
+export default function UmkmCard({ id, slug, imageSrc, name, description, category, whatsappLink, phoneNumber, shopeeLink, tiktokLink, mapsLink, isAdmin }) {
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+
+  const handleDelete = () => {
+    setShowConfirm(true);
+  };
+
+  const confirmDelete = () => {
+    setIsDeleting(true);
+    startTransition(async () => {
+      const result = await deleteUmkm(id);
+      if (result.success) {
+        router.refresh();
+      } else {
+        alert(result.error);
+        setIsDeleting(false);
+      }
+      setShowConfirm(false);
+    });
+  };
+
   return (
-    <div className="flex flex-col bg-primary-dark/40 backdrop-blur-md border border-white/5 rounded-2xl overflow-hidden transition-all duration-300 group hover:-translate-y-2 hover:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.5),0_10px_10px_-5px_rgba(0,0,0,0.3)]">
+    <div className={`flex flex-col bg-primary-dark/40 backdrop-blur-md border border-white/5 rounded-2xl overflow-hidden transition-all duration-300 group hover:-translate-y-2 hover:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.5),0_10px_10px_-5px_rgba(0,0,0,0.3)] relative ${isDeleting ? 'opacity-50 pointer-events-none' : ''}`}>
+      {/* Delete confirmation overlay */}
+      {showConfirm && (
+        <div className="absolute inset-0 z-20 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center rounded-2xl">
+          <div className="bg-red-500/20 p-3 rounded-full mb-3">
+            <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+            </svg>
+          </div>
+          <h4 className="font-heading text-lg text-white mb-2">Hapus UMKM?</h4>
+          <p className="text-slate-300 text-sm font-body mb-4">Anda yakin ingin menghapus <strong className="text-white">{name}</strong>? Tindakan ini tidak dapat dibatalkan.</p>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setShowConfirm(false)}
+              className="px-5 py-2.5 rounded-lg bg-white/10 border border-white/10 text-white font-heading font-medium text-sm cursor-pointer hover:bg-white/20 transition-all"
+            >
+              Batal
+            </button>
+            <button
+              onClick={confirmDelete}
+              disabled={isPending}
+              className="px-5 py-2.5 rounded-lg bg-red-500 text-white font-heading font-medium text-sm cursor-pointer hover:bg-red-600 transition-all disabled:opacity-70"
+            >
+              {isPending ? 'Menghapus...' : 'Ya, Hapus'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Admin action buttons */}
+      {isAdmin && (
+        <div className="absolute top-4 left-4 z-10 flex gap-2">
+          <Link
+            href={`/umkm/edit/${id}`}
+            className="flex items-center justify-center w-9 h-9 rounded-full bg-gold/90 text-white hover:bg-gold hover:scale-110 transition-all duration-200 shadow-lg no-underline"
+            aria-label={`Edit ${name}`}
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+            </svg>
+          </Link>
+          <button
+            onClick={handleDelete}
+            className="flex items-center justify-center w-9 h-9 rounded-full bg-red-500/90 text-white hover:bg-red-500 hover:scale-110 transition-all duration-200 shadow-lg border-none cursor-pointer"
+            aria-label={`Hapus ${name}`}
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+            </svg>
+          </button>
+        </div>
+      )}
+
       <Link href={`/umkm/${slug}`} className="relative w-full aspect-[4/3] overflow-hidden block">
         <Image 
           src={imageSrc || '/images/village-landscape.png'} 

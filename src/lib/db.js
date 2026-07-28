@@ -1,3 +1,4 @@
+import { connection } from 'next/server';
 import { supabase } from './supabase';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://qlrwbstgczhdgxjlobzz.supabase.co';
@@ -9,6 +10,7 @@ function formatImageSrc(imgSrc) {
 }
 
 export async function getUmkms() {
+  await connection();
   try {
     const { data, error } = await supabase
       .from('umkms')
@@ -31,6 +33,7 @@ export async function getUmkms() {
 }
 
 export async function getUmkmBySlug(slug) {
+  await connection();
   try {
     const { data: umkm, error } = await supabase
       .from('umkms')
@@ -51,6 +54,32 @@ export async function getUmkmBySlug(slug) {
     };
   } catch (error) {
     console.error('Error fetching UMKM by slug:', error);
+    return null;
+  }
+}
+
+export async function getUmkmById(id) {
+  await connection();
+  try {
+    const { data: umkm, error } = await supabase
+      .from('umkms')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      console.error('Error fetching UMKM by id from Supabase:', error.message || error);
+      return null;
+    }
+
+    if (!umkm) return null;
+    
+    return {
+      ...umkm,
+      imageSrc: formatImageSrc(umkm.imgSrc)
+    };
+  } catch (error) {
+    console.error('Error fetching UMKM by id:', error);
     return null;
   }
 }

@@ -5,6 +5,28 @@ import { revalidatePath } from 'next/cache';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import { createSession, getSession } from '@/lib/auth';
+import { getUmkmById } from '@/lib/db';
+
+export async function getUmkmByIdAction(id) {
+  const session = await getSession();
+  const isAdmin = !!session;
+
+  try {
+    const umkm = await getUmkmById(id);
+    if (!umkm) {
+      return { success: false, error: 'UMKM tidak ditemukan.', isAdmin };
+    }
+    return { success: true, data: umkm, isAdmin };
+  } catch (error) {
+    console.error('Error fetching UMKM by ID:', error);
+    return { success: false, error: 'Gagal memuat data UMKM.', isAdmin };
+  }
+}
+
+export async function checkSessionAction() {
+  const session = await getSession();
+  return { isAdmin: !!session };
+}
 
 export async function loginUser(username, password) {
   try {
@@ -144,3 +166,145 @@ export async function registerUmkm(formData) {
     return { success: false, error: 'Gagal mendaftar. Silakan coba lagi.' };
   }
 }
+
+export async function deleteUmkm(id) {
+  const session = await getSession();
+  if (!session) {
+    return { success: false, error: 'Unauthorized: Harap login terlebih dahulu.' };
+  }
+
+  try {
+    // First, get the UMKM to find the image path
+    const { data: umkm, error: fetchError } = await supabaseAdmin
+      .from('umkms')
+      .select('imgSrc')
+      .eq('id', id)
+      .single();
+
+    if (fetchError) {
+      console.error('Error fetching UMKM for deletion:', fetchError);
+      return { success: false, error: 'UMKM tidak ditemukan.' };
+    }
+
+    // Delete image from storage if it exists and is stored in Supabase
+    if (umkm?.imgSrc && !umkm.imgSrc.startsWith('/')) {
+      // Extract filename from URL or use imgSrc directly
+      let fileName = umkm.imgSrc;
+      if (fileName.includes('/')) {
+        fileName = fileName.split('/').pop();
+      }
+      await supabaseAdmin.storage.from('umkm-images').remove([fileName]);
+    }
+
+    // Delete the UMKM record
+    const { error } = await supabaseAdmin
+      .from('umkms')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error deleting UMKM:', error);
+      return { success: false, error: 'Gagal menghapus UMKM. Silakan coba lagi.' };
+    }
+
+    revalidatePath('/umkm');
+    revalidatePath('/');
+    return { success: true };
+  } catch (error) {
+    console.error('Error deleting UMKM:', error);
+    return { success: false, error: 'Gagal menghapus UMKM. Silakan coba lagi.' };
+  }
+}
+
+export async function updateUmkm(id, formData) {
+  const session = await getSession();
+  if (!session) {
+    return { success: false, error: 'Unauthorized: Harap login terlebih dahulu.' };
+  }
+
+  const namaUsaha = formData.get('namaUsaha');
+  const namaPemilik = formData.get('namaPemilik');
+  const kategori = formData.get('kategori');
+  const alamat = formData.get('alamat');
+  const telepon = formData.get('telepon');
+  const deskripsi = formData.get('deskripsi');
+  const shopeeLink = formData.get('shopeeLink') || '';
+  const tiktokLink = formData.get('tiktokLink') || '';
+  const mapsLink = formData.get('mapsLink') || '';
+
+  let whatsappLink = formData.get('whatsappLink') || '';
+  if (!whatsappLink && telepon) {
+    let cleanPhone = telepon.replace(/\D/g, '');
+    if (cleanPhone.startsWith('0')) {
+      cleanPhone = '62' + cleanPhone.substring(1);
+    }
+    whatsappLink = `https://wa.me/${cleanPhone}`;
+  }
+
+  try {
+    let normalizedCategory = kategori;
+    if (kategori === 'Food & Drink') normalizedCategory = 'Makanan';
+    else if (kategori === 'Clothing & Apparel') normalizedCategory = 'Fashion';
+    else if (kategori === 'Kerajinan Tangan') normalizedCategory = 'Kerajinan';
+    else if (kategori === 'Jasa & Layanan') normalizedCategory = 'Jasa';
+
+    const updateData = {
+      namaUsaha,
+      namaPemilik,
+      kategori: normalizedCategory,
+      alamat,
+      telepon,
+      deskripsi,
+      whatsappLink,
+      shopeeLink,
+      tiktokLink,
+      mapsLink,
+    };
+
+    // Handle image upload if a new image is provided
+    const imageFile = formData.get('image');
+    if (imageFile && imageFile.size > 0) {
+      const arrayBuffer = await imageFile.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      const ext = imageFile.name.split('.').pop() || 'jpg';
+      const fileName = `${id}.${ext}`;
+
+      // Delete old image first (overwrite by using upsert: true)
+      const { error: uploadError } = await supabaseAdmin.storage
+        .from('umkm-images')
+        .upload(fileName, buffer, {
+          contentType: imageFile.type || 'image/jpeg',
+          upsert: true,
+        });
+
+      if (uploadError) {
+        console.error('Error uploading new image:', uploadError);
+        return { success: false, error: 'Gagal mengunggah gambar baru.' };
+      }
+
+      const { data: publicUrlData } = supabaseAdmin.storage
+        .from('umkm-images')
+        .getPublicUrl(fileName);
+
+      updateData.imgSrc = publicUrlData.publicUrl;
+    }
+
+    const { error } = await supabaseAdmin
+      .from('umkms')
+      .update(updateData)
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error updating UMKM:', error);
+      return { success: false, error: 'Gagal memperbarui UMKM. Silakan coba lagi.' };
+    }
+
+    revalidatePath('/umkm');
+    revalidatePath('/');
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating UMKM:', error);
+    return { success: false, error: 'Gagal memperbarui UMKM. Silakan coba lagi.' };
+  }
+}
+

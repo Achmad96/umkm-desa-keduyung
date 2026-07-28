@@ -5,7 +5,7 @@ import UmkmCard from "./UmkmCard";
 
 const categories = ["Semua", "Makanan", "Camilan", "Minuman", "Fashion", "Kerajinan", "Jasa"];
 
-export default function UmkmList({ initialUmkms }) {
+export default function UmkmList({ initialUmkms, isAdmin = false }) {
   const [activeFilter, setActiveFilter] = useState("Semua");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
@@ -52,6 +52,7 @@ export default function UmkmList({ initialUmkms }) {
                 shopeeLink={umkm.shopeeLink}
                 tiktokLink={umkm.tiktokLink}
                 mapsLink={umkm.mapsLink}
+                isAdmin={isAdmin}
               />
             ))}
           </div>

@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import CategoryCard from '../../components/CategoryCard';
 import LoginModal from '../../components/LoginModal';
-import { registerUmkm } from '../actions';
+import { registerUmkm, checkSessionAction } from '../actions';
 
 export default function PendaftaranPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -22,6 +22,12 @@ export default function PendaftaranPage() {
   });
 
   const formRef = useRef(null);
+
+  useEffect(() => {
+    checkSessionAction().then(result => {
+      if (result.isAdmin) setIsLoggedIn(true);
+    });
+  }, []);
 
   const handleCategorySelect = (categoryTitle) => {
     setFormData(prev => ({ ...prev, kategori: categoryTitle }));
