@@ -157,6 +157,43 @@ export async function registerUMKM(formData) {
       return { success: false, error: 'Gagal mendaftar. Silakan coba lagi.' };
     }
 
+    // Process gallery images if present
+    const galleryImages = formData.getAll('galleryImages');
+    const validGalleryImages = galleryImages.filter(file => file && file.size > 0);
+    
+    if (validGalleryImages.length > 0) {
+      const galleryInserts = [];
+      
+      for (let i = 0; i < validGalleryImages.length; i++) {
+        const gFile = validGalleryImages[i];
+        const gArrayBuffer = await gFile.arrayBuffer();
+        const gBuffer = Buffer.from(gArrayBuffer);
+        const gExt = gFile.name.split('.').pop() || 'jpg';
+        const gFileName = `${id}-gallery-${i}-${crypto.randomBytes(4).toString('hex')}.${gExt}`;
+        
+        const { error: gUploadError } = await supabaseAdmin.storage
+          .from('umkm-images')
+          .upload(gFileName, gBuffer, {
+            contentType: gFile.type || 'image/jpeg',
+          });
+          
+        if (!gUploadError) {
+          const { data: gPublicUrlData } = supabaseAdmin.storage
+            .from('umkm-images')
+            .getPublicUrl(gFileName);
+            
+          galleryInserts.push({
+            umkm_id: id,
+            imgSrc: gPublicUrlData.publicUrl
+          });
+        }
+      }
+      
+      if (galleryInserts.length > 0) {
+        await supabaseAdmin.from('umkm_images').insert(galleryInserts);
+      }
+    }
+
     revalidatePath('/umkm');
     revalidatePath('/');
     return { success: true };
@@ -296,6 +333,43 @@ export async function updateUMKM(id, formData) {
     if (error) {
       console.error('Error updating UMKM:', error);
       return { success: false, error: 'Gagal memperbarui UMKM. Silakan coba lagi.' };
+    }
+
+    // Process new gallery images if present
+    const galleryImages = formData.getAll('galleryImages');
+    const validGalleryImages = galleryImages.filter(file => file && file.size > 0);
+    
+    if (validGalleryImages.length > 0) {
+      const galleryInserts = [];
+      
+      for (let i = 0; i < validGalleryImages.length; i++) {
+        const gFile = validGalleryImages[i];
+        const gArrayBuffer = await gFile.arrayBuffer();
+        const gBuffer = Buffer.from(gArrayBuffer);
+        const gExt = gFile.name.split('.').pop() || 'jpg';
+        const gFileName = `${id}-gallery-${Date.now()}-${crypto.randomBytes(4).toString('hex')}.${gExt}`;
+        
+        const { error: gUploadError } = await supabaseAdmin.storage
+          .from('umkm-images')
+          .upload(gFileName, gBuffer, {
+            contentType: gFile.type || 'image/jpeg',
+          });
+          
+        if (!gUploadError) {
+          const { data: gPublicUrlData } = supabaseAdmin.storage
+            .from('umkm-images')
+            .getPublicUrl(gFileName);
+            
+          galleryInserts.push({
+            umkm_id: id,
+            imgSrc: gPublicUrlData.publicUrl
+          });
+        }
+      }
+      
+      if (galleryInserts.length > 0) {
+        await supabaseAdmin.from('umkm_images').insert(galleryInserts);
+      }
     }
 
     revalidatePath('/umkm');

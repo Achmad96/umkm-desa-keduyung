@@ -220,8 +220,13 @@ export default function PendaftaranPage() {
               </div>
 
               <div className="mb-6 flex flex-col text-left">
-                <label htmlFor="image" className="font-heading font-medium mb-2 text-slate-400">Foto Usaha / Produk (Opsional)</label>
+                <label htmlFor="image" className="font-heading font-medium mb-2 text-slate-400">Foto Utama (Opsional)</label>
                 <input type="file" id="image" name="image" accept="image/*" className="bg-white/5 border border-white/10 p-3 px-4 rounded-lg text-white font-body transition-all duration-300 w-full focus:outline-none focus:border-gold focus:shadow-[0_0_0_3px_rgba(214,158,46,0.15)] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary-dark" />
+              </div>
+
+              <div className="mb-6 flex flex-col text-left">
+                <label htmlFor="galleryImages" className="font-heading font-medium mb-2 text-slate-400">Foto Galeri (Bisa pilih lebih dari satu, Opsional)</label>
+                <input type="file" id="galleryImages" name="galleryImages" accept="image/*" multiple className="bg-white/5 border border-white/10 p-3 px-4 rounded-lg text-white font-body transition-all duration-300 w-full focus:outline-none focus:border-gold focus:shadow-[0_0_0_3px_rgba(214,158,46,0.15)] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary-dark" />
               </div>
 
               <div className="mb-6 flex flex-col text-left">

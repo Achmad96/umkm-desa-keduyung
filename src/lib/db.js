@@ -14,7 +14,7 @@ export async function getUMKMs() {
   try {
     const { data, error } = await supabase
       .from('umkms')
-      .select('*')
+      .select('*, umkm_images(*)')
       .order('createdAt', { ascending: false });
 
     if (error) {
@@ -24,7 +24,8 @@ export async function getUMKMs() {
 
     return (data || []).map(umkm => ({
       ...umkm,
-      imageSrc: formatImageSrc(umkm.imgSrc)
+      imageSrc: formatImageSrc(umkm.imgSrc),
+      galleryImages: (umkm.umkm_images || []).map(img => formatImageSrc(img.imgSrc)).filter(Boolean)
     }));
   } catch (error) {
     console.error('Error fetching UMKMs:', error);
@@ -37,7 +38,7 @@ export async function getUMKMBySlug(slug) {
   try {
     const { data: umkm, error } = await supabase
       .from('umkms')
-      .select('*')
+      .select('*, umkm_images(*)')
       .eq('slug', slug)
       .single();
 
@@ -50,7 +51,8 @@ export async function getUMKMBySlug(slug) {
 
     return {
       ...umkm,
-      imageSrc: formatImageSrc(umkm.imgSrc)
+      imageSrc: formatImageSrc(umkm.imgSrc),
+      galleryImages: (umkm.umkm_images || []).map(img => formatImageSrc(img.imgSrc)).filter(Boolean)
     };
   } catch (error) {
     console.error('Error fetching UMKM by slug:', error);
@@ -63,7 +65,7 @@ export async function getUMKMById(id) {
   try {
     const { data: umkm, error } = await supabase
       .from('umkms')
-      .select('*')
+      .select('*, umkm_images(*)')
       .eq('id', id)
       .single();
 
@@ -76,7 +78,8 @@ export async function getUMKMById(id) {
 
     return {
       ...umkm,
-      imageSrc: formatImageSrc(umkm.imgSrc)
+      imageSrc: formatImageSrc(umkm.imgSrc),
+      galleryImages: (umkm.umkm_images || []).map(img => formatImageSrc(img.imgSrc)).filter(Boolean)
     };
   } catch (error) {
     console.error('Error fetching UMKM by id:', error);

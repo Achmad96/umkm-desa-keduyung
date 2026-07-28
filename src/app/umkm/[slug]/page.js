@@ -74,12 +74,11 @@ export default async function UMKMDetailPage({ params }) {
             <section className="bg-white/5 backdrop-blur-md border border-white/5 rounded-2xl p-8">
               <h2 className="font-heading text-2xl text-white mb-6">Galeri Produk / Tempat</h2>
               <GalleryLightbox
-                images={[
-                  umkm.imageSrc || '/images/village-landscape.png',
-                  // Fallbacks for the carousel effect since currently DB only holds 1 image
-                  '/images/village-landscape.png',
-                  '/images/hero-bg.jpg'
-                ]}
+                images={
+                  umkm.galleryImages && umkm.galleryImages.length > 0 
+                    ? umkm.galleryImages 
+                    : [umkm.imageSrc || '/images/village-landscape.png']
+                }
               />
             </section>
           </div>
