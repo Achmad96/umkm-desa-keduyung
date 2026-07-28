@@ -1,26 +1,54 @@
-const { createServer } = require('https')
-const { parse } = require('url')
-const next = require('next')
+const { createServer } = require('http');
+const { parse } = require('url');
+const next = require('next');
 
-const dev = process.env.NODE_ENV !== 'production'
-const hostname = 'localhost'
-const port = process.env.PORT || 3001
+const dev = process.env.NODE_ENV !== 'production';
+const hostname = 'localhost';
+// Parse the initial port to ensure it's a number
+let initialPort = parseInt(process.env.PORT, 10) || 3000;
 
-const app = next({ dev, hostname, port })
-const handle = app.getRequestHandler()
+const app = next({ dev, hostname, port: initialPort });
+const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
-  createServer(async (req, res) => {
+  const server = createServer(async (req, res) => {
     try {
-      const parsedUrl = parse(req.url, true)
-      await handle(req, res, parsedUrl)
+      const parsedUrl = parse(req.url, true);
+      await handle(req, res, parsedUrl);
     } catch (err) {
-      console.error('Error occurred handling', req.url, err)
-      res.statusCode = 500
-      res.end('internal server error')
+      console.error('Error occurred handling', req.url, err);
+      res.statusCode = 500;
+      res.end('internal server error');
     }
-  }).listen(port, (err) => {
-    if (err) throw err
-    console.log(`> Ready on https://${hostname}:${port}`)
-  })
-})
+  });
+
+  // Recursive function to test ports
+  const startServer = (portToTry) => {
+    server.listen(portToTry, (err) => {
+      if (err) {
+        console.error(`> Failed to start on port ${portToTry}:`, err);
+        return;
+      }
+      console.log(`> Ready on http://${hostname}:${portToTry}`);
+    });
+  };
+
+  // Intercept the error event to catch port conflicts
+  server.on('error', (e) => {
+    if (e.code === 'EADDRINUSE') {
+      console.warn(`> Port ${initialPort} is in use. Trying port ${initialPort + 1}...`);
+      initialPort += 1; // Increment the port
+
+      // Update Next.js internal port reference for absolute URLs
+      app.port = initialPort;
+
+      // Try again with the new port
+      startServer(initialPort);
+    } else {
+      console.error('> Server error:', e);
+    }
+  });
+
+  // Start the initial attempt
+  startServer(initialPort);
+});
