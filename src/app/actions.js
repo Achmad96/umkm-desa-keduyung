@@ -62,7 +62,9 @@ export async function registerUmkm(formData) {
   const imageFile = formData.get('image');
 
   if (imageFile && imageFile.size > 0) {
-    const buffer = await imageFile.arrayBuffer();
+    // Convert to standard Node Buffer which is universally supported in all Node environments
+    const arrayBuffer = await imageFile.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
 
     // Extract file extension and append to ID
     const ext = imageFile.name.split('.').pop() || 'jpg';
@@ -76,7 +78,8 @@ export async function registerUmkm(formData) {
 
     if (error) {
       console.error('Error uploading image to Supabase:', error);
-      return { success: false, error: 'Gagal mengunggah gambar. Silakan coba lagi.' };
+      const errorMsg = error.message || JSON.stringify(error);
+      return { success: false, error: `Gagal mengunggah gambar: ${errorMsg}` };
     }
 
     const { data: publicUrlData } = supabaseAdmin.storage
