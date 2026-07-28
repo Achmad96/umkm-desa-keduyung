@@ -6,22 +6,8 @@ import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import { createSession, getSession } from '@/lib/auth';
 
-export async function loginUser(username, password, captchaToken) {
+export async function loginUser(username, password) {
   try {
-    if (!captchaToken) {
-      return { success: false, error: 'CAPTCHA wajib diisi.' };
-    }
-
-    const secretKey = process.env.RECAPTCHA_SECRET_KEY;
-    const verifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${captchaToken}`;
-    
-    const recaptchaRes = await fetch(verifyUrl, { method: 'POST' });
-    const recaptchaJson = await recaptchaRes.json();
-    
-    if (!recaptchaJson.success) {
-      return { success: false, error: 'Verifikasi CAPTCHA gagal. Silakan coba lagi.' };
-    }
-
     const envUsername = process.env.ADMIN_USERNAME;
     const envPassword = process.env.ADMIN_PASSWORD;
 

@@ -1,12 +1,9 @@
-import { useState, useTransition, useRef } from "react";
-import ReCAPTCHA from "react-google-recaptcha";
+import { useState, useTransition } from "react";
 import { loginUser } from "@/app/actions";
 
 export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [captchaToken, setCaptchaToken] = useState("");
-  const recaptchaRef = useRef(null);
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
 
@@ -16,21 +13,12 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
     e.preventDefault();
     setError("");
 
-    if (!captchaToken) {
-      setError("Silakan verifikasi CAPTCHA terlebih dahulu.");
-      return;
-    }
-
     startTransition(async () => {
-      const result = await loginUser(username, password, captchaToken);
+      const result = await loginUser(username, password);
       if (result.success) {
         onLoginSuccess();
       } else {
         setError(result.error);
-        if (recaptchaRef.current) {
-          recaptchaRef.current.reset();
-        }
-        setCaptchaToken("");
       }
     });
   };
@@ -83,15 +71,6 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
               onChange={(e) => setPassword(e.target.value)}
               className="bg-white/5 border border-white/10 p-3 px-4 rounded-lg text-white font-body transition-all duration-300 w-full focus:outline-none focus:border-gold focus:shadow-[0_0_0_3px_rgba(214,158,46,0.15)]"
               placeholder="••••••••"
-            />
-          </div>
-
-          <div className="flex justify-center my-4">
-            <ReCAPTCHA
-              ref={recaptchaRef}
-              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-              onChange={(token) => setCaptchaToken(token)}
-              theme="dark"
             />
           </div>
 
