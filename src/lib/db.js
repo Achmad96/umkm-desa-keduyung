@@ -25,7 +25,8 @@ export async function getUMKMs() {
     return (data || []).map(umkm => ({
       ...umkm,
       imageSrc: formatImageSrc(umkm.imgSrc),
-      galleryImages: (umkm.umkm_images || []).map(img => formatImageSrc(img.imgSrc)).filter(Boolean)
+      galleryImages: (umkm.umkm_images || []).map(img => formatImageSrc(img.imgsrc)).filter(Boolean),
+      galleryImagesData: (umkm.umkm_images || []).map(img => ({ id: img.id, url: formatImageSrc(img.imgsrc), rawName: img.imgsrc })).filter(item => item.url)
     }));
   } catch (error) {
     console.error('Error fetching UMKMs:', error);
@@ -52,7 +53,8 @@ export async function getUMKMBySlug(slug) {
     return {
       ...umkm,
       imageSrc: formatImageSrc(umkm.imgSrc),
-      galleryImages: (umkm.umkm_images || []).map(img => formatImageSrc(img.imgSrc)).filter(Boolean)
+      galleryImages: (umkm.umkm_images || []).map(img => formatImageSrc(img.imgsrc)).filter(Boolean),
+      galleryImagesData: (umkm.umkm_images || []).map(img => ({ id: img.id, url: formatImageSrc(img.imgsrc), rawName: img.imgsrc })).filter(item => item.url)
     };
   } catch (error) {
     console.error('Error fetching UMKM by slug:', error);
@@ -79,7 +81,8 @@ export async function getUMKMById(id) {
     return {
       ...umkm,
       imageSrc: formatImageSrc(umkm.imgSrc),
-      galleryImages: (umkm.umkm_images || []).map(img => formatImageSrc(img.imgSrc)).filter(Boolean)
+      galleryImages: (umkm.umkm_images || []).map(img => formatImageSrc(img.imgsrc)).filter(Boolean),
+      galleryImagesData: (umkm.umkm_images || []).map(img => ({ id: img.id, url: formatImageSrc(img.imgsrc), rawName: img.imgsrc })).filter(item => item.url)
     };
   } catch (error) {
     console.error('Error fetching UMKM by id:', error);

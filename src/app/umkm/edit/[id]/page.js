@@ -4,8 +4,9 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { updateUMKM } from '@/app/actions';
-import { getUMKMByIdAction } from '@/app/actions';
+import { getUMKMByIdAction, deleteGalleryImageAction } from '@/app/actions';
 import LoginModal from '@/components/LoginModal';
+import Image from 'next/image';
 
 export default function EditUMKMPage({ params }) {
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function EditUMKMPage({ params }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [umkmId, setUMKMId] = useState(null);
+  const [existingGallery, setExistingGallery] = useState([]);
   const [formData, setFormData] = useState({
     namaUsaha: '',
     namaPemilik: '',
@@ -40,6 +42,7 @@ export default function EditUMKMPage({ params }) {
 
       setIsLoggedIn(result.isAdmin);
       const umkm = result.data;
+      setExistingGallery(umkm.galleryImagesData || []);
       setFormData({
         namaUsaha: umkm.namaUsaha || '',
         namaPemilik: umkm.namaPemilik || '',
@@ -59,6 +62,18 @@ export default function EditUMKMPage({ params }) {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleDeleteGalleryImage = async (imageId, rawName) => {
+    if (!confirm('Apakah Anda yakin ingin menghapus foto galeri ini?')) return;
+    setIsSubmitting(true);
+    const res = await deleteGalleryImageAction(imageId, rawName);
+    if (res.success) {
+      setExistingGallery(prev => prev.filter(img => img.id !== imageId));
+    } else {
+      alert(res.error);
+    }
+    setIsSubmitting(false);
   };
 
   const handleSubmit = async (e) => {
@@ -179,6 +194,29 @@ export default function EditUMKMPage({ params }) {
               </div>
 
               <div className="mb-6 flex flex-col text-left">
+                <label className="font-heading font-medium mb-2 text-slate-400">Foto Galeri Saat Ini</label>
+                {existingGallery.length > 0 ? (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-4">
+                    {existingGallery.map(img => (
+                      <div key={img.id} className="relative aspect-square rounded-lg overflow-hidden border border-white/10 group">
+                        <Image src={img.url} alt="Gallery image" fill className="object-cover" />
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteGalleryImage(img.id, img.rawName)}
+                            className="bg-red-500/80 text-white p-2 rounded-full hover:bg-red-600 transition-colors"
+                            title="Hapus foto"
+                          >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-slate-500 font-body mb-4 italic">Belum ada foto galeri.</p>
+                )}
+                
                 <label htmlFor="galleryImages" className="font-heading font-medium mb-2 text-slate-400">Tambah Foto Galeri (Bisa pilih lebih dari satu, Opsional)</label>
                 <input type="file" id="galleryImages" name="galleryImages" accept="image/*" multiple className="bg-white/5 border border-white/10 p-3 px-4 rounded-lg text-white font-body transition-all duration-300 w-full focus:outline-none focus:border-gold focus:shadow-[0_0_0_3px_rgba(214,158,46,0.15)] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary-dark" />
                 <p className="text-sm text-slate-500 mt-1 font-body">Pilih foto-foto baru untuk ditambahkan ke galeri produk Anda.</p>

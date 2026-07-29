@@ -184,7 +184,7 @@ export async function registerUMKM(formData) {
             
           galleryInserts.push({
             umkm_id: id,
-            imgSrc: gPublicUrlData.publicUrl
+            imgsrc: gPublicUrlData.publicUrl
           });
         }
       }
@@ -362,7 +362,7 @@ export async function updateUMKM(id, formData) {
             
           galleryInserts.push({
             umkm_id: id,
-            imgSrc: gPublicUrlData.publicUrl
+            imgsrc: gPublicUrlData.publicUrl
           });
         }
       }
@@ -378,6 +378,43 @@ export async function updateUMKM(id, formData) {
   } catch (error) {
     console.error('Error updating UMKM:', error);
     return { success: false, error: 'Gagal memperbarui UMKM. Silakan coba lagi.' };
+  }
+}
+
+export async function deleteGalleryImageAction(imageId, fileName) {
+  const session = await getSession();
+  if (!session) {
+    return { success: false, error: 'Unauthorized: Harap login terlebih dahulu.' };
+  }
+
+  try {
+    // 1. Delete from Supabase Storage
+    if (fileName && fileName.includes('umkm-images/')) {
+      const extractedFileName = fileName.split('/').pop();
+      const { error: storageError } = await supabaseAdmin.storage
+        .from('umkm-images')
+        .remove([extractedFileName]);
+      if (storageError) {
+        console.error('Error deleting gallery image from storage:', storageError);
+      }
+    }
+
+    // 2. Delete from Database
+    const { error: dbError } = await supabaseAdmin
+      .from('umkm_images')
+      .delete()
+      .eq('id', imageId);
+
+    if (dbError) {
+      console.error('Error deleting gallery image from DB:', dbError);
+      return { success: false, error: 'Gagal menghapus foto dari database.' };
+    }
+
+    revalidatePath('/umkm');
+    return { success: true };
+  } catch (error) {
+    console.error('Error deleting gallery image:', error);
+    return { success: false, error: 'Gagal menghapus foto. Silakan coba lagi.' };
   }
 }
 
