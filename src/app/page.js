@@ -7,6 +7,15 @@ import UMKMCard from '@/components/UMKMCard';
 import { getUMKMs } from '@/lib/db';
 import { getSession } from '@/lib/auth';
 
+export const metadata = {
+  title: 'Beranda',
+  description: 'Mengenal lebih dekat potensi dan keindahan Desa Keduyung serta UMKM unggulan kami.',
+  openGraph: {
+    title: 'Beranda | UMKM Desa Keduyung',
+    description: 'Mengenal lebih dekat potensi dan keindahan Desa Keduyung serta UMKM unggulan kami.',
+  },
+};
+
 export default async function HomePage() {
   const umkms = await getUMKMs();
   const session = await getSession();

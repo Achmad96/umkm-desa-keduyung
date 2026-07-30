@@ -10,8 +10,27 @@ export async function generateMetadata({ params }) {
   if (!umkm) return { title: 'UMKM Tidak Ditemukan' };
 
   return {
-    title: `${umkm.namaUsaha} | UMKM Desa Keduyung`,
-    description: umkm.deskripsi
+    title: umkm.namaUsaha,
+    description: umkm.deskripsi,
+    openGraph: {
+      title: `${umkm.namaUsaha} | UMKM Desa Keduyung`,
+      description: umkm.deskripsi,
+      images: [
+        {
+          url: umkm.imageSrc || '/images/village-landscape.png',
+          width: 1200,
+          height: 630,
+          alt: umkm.namaUsaha,
+        },
+      ],
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${umkm.namaUsaha} | UMKM Desa Keduyung`,
+      description: umkm.deskripsi,
+      images: [umkm.imageSrc || '/images/village-landscape.png'],
+    },
   };
 }
 

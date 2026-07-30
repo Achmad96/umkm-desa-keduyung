@@ -14,8 +14,34 @@ const outfit = Outfit({
 });
 
 export const metadata = {
-  title: 'Kumpulan UMKM Desa Keduyung',
+  title: {
+    default: 'UMKM Desa Keduyung',
+    template: '%s | UMKM Desa Keduyung'
+  },
   description: 'Direktori Usaha Mikro Kecil Menengah (UMKM) Desa Keduyung',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'),
+  openGraph: {
+    title: 'UMKM Desa Keduyung',
+    description: 'Direktori Usaha Mikro Kecil Menengah (UMKM) Desa Keduyung',
+    url: '/',
+    siteName: 'UMKM Desa Keduyung',
+    images: [
+      {
+        url: '/images/village-landscape.png',
+        width: 1200,
+        height: 630,
+        alt: 'Pemandangan Desa Keduyung',
+      },
+    ],
+    locale: 'id_ID',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'UMKM Desa Keduyung',
+    description: 'Direktori Usaha Mikro Kecil Menengah (UMKM) Desa Keduyung',
+    images: ['/images/village-landscape.png'],
+  },
 };
 
 export default function RootLayout({ children }) {

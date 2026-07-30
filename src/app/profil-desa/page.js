@@ -5,6 +5,15 @@ import Link from 'next/link';
 import SectionCard from '@/components/SectionCard';
 import AnimatedNumber from '@/components/AnimatedNumber';
 
+export const metadata = {
+  title: 'Profil Desa',
+  description: 'Mengenal Desa Keduyung Lebih Dekat - Sejarah, Demografi, dan Potensi',
+  openGraph: {
+    title: 'Profil Desa | UMKM Desa Keduyung',
+    description: 'Mengenal Desa Keduyung Lebih Dekat - Sejarah, Demografi, dan Potensi',
+  },
+};
+
 export default function ProfilDesaPage() {
   return (
     <main>

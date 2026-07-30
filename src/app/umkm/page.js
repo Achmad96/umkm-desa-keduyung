@@ -3,6 +3,15 @@ import { getUMKMs, getUMKMBySlug } from '@/lib/db';
 import { getSession } from '@/lib/auth';
 import Link from 'next/link';
 
+export const metadata = {
+  title: 'Direktori UMKM',
+  description: 'Temukan berbagai produk unggulan dari Usaha Mikro Kecil Menengah Desa Keduyung',
+  openGraph: {
+    title: 'Direktori UMKM | UMKM Desa Keduyung',
+    description: 'Temukan berbagai produk unggulan dari Usaha Mikro Kecil Menengah Desa Keduyung',
+  },
+};
+
 export default async function UMKMPage() {
   const umkms = await getUMKMs();
   const session = await getSession();
