@@ -41,7 +41,7 @@ export async function getUMKMBySlug(slug) {
       .from('umkms')
       .select('*, umkm_images(*)')
       .eq('slug', slug)
-      .single();
+      .maybeSingle();
 
     if (error) {
       console.error('Error fetching UMKM by slug from Supabase:', error.message || error);
@@ -69,7 +69,7 @@ export async function getUMKMById(id) {
       .from('umkms')
       .select('*, umkm_images(*)')
       .eq('id', id)
-      .single();
+      .maybeSingle();
 
     if (error) {
       console.error('Error fetching UMKM by id from Supabase:', error.message || error);

@@ -215,7 +215,7 @@ export async function deleteUMKM(id) {
       .from('umkms')
       .select('imgSrc')
       .eq('id', id)
-      .single();
+      .maybeSingle();
 
     if (fetchError) {
       console.error('Error fetching UMKM for deletion:', fetchError);
